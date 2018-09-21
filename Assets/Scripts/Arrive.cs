@@ -22,7 +22,16 @@ public class Arrive : AgentBehavior {
         else
             targetSpeed = agent.maxSpeed * distance / slowRadius;
         //Stopped at Page 10, Step 3
-
-        return base.GetSteering();
+        Vector3 desiredVelocity = direction;
+        desiredVelocity.Normalize();
+        desiredVelocity *= targetSpeed;
+        steering.linear = desiredVelocity - agent.velocity;
+        steering.linear /= timeToTarget;
+        if (steering.linear.magnitude > agent.maxAccel)
+        {
+            steering.linear.Normalize();
+            steering.linear *= agent.maxAccel;
+        }
+        return steering;
     }
 }
